@@ -131,6 +131,16 @@ def login():
                         }
                     ),
                 )
+                
+                # 提交更改
+                connection.commit()
+                query_sql = """
+                    SELECT *
+                    FROM gamecreator_auth
+                    WHERE uid = %(uid)s;
+                    """
+                execute, auth_data = query(cursor, query_sql, ({"uid": uid}))
+                auth_data = auth_data[0]
 
             # 验证 auth_token 是否过期失效
             if not verify_token(
@@ -152,9 +162,16 @@ def login():
                         }
                     ),
                 )
-
-            # 提交更改
-            connection.commit()
+                
+                # 提交更改
+                connection.commit()
+                query_sql = """
+                    SELECT *
+                    FROM gamecreator_auth
+                    WHERE uid = %(uid)s;
+                    """
+                execute, auth_data = query(cursor, query_sql, ({"uid": uid}))
+                auth_data = auth_data[0]
 
         return jsonify(message_status(auth_data, "登录成功"))
 
@@ -165,7 +182,7 @@ def login():
 @app.route("/apis/gamecreator/auth/status", methods=["POST"])
 def status():
     "查询登录状态"
-    data = json.loads(request.body.decode("utf-8"))
+    data = request.get_json()
     auth_token = data.get("auth_token")
 
     if auth_token is None:
