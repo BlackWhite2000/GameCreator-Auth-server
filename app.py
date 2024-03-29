@@ -205,7 +205,7 @@ def status():
     auth_key = auth_key[0]
 
     # 验证auth_token是否过期失效
-    if not verify_token(auth_key.get("secret_key"), auth_token):
+    if verify_token(auth_key.get("secret_key"), auth_token):
         # 尝试获取现有记录
         query_sql = """
         SELECT *
