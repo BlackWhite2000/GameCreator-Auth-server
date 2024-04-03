@@ -110,6 +110,12 @@ def login():
             )
             # 提交更改
             connection.commit()
+            query_sql = """
+            SELECT *
+            FROM gamecreator_auth
+            WHERE uid = %(uid)s;
+            """
+            execute, auth_data = query(cursor, query_sql, ({"uid": uid}))
             auth_data = auth_data[0]
 
         else:
